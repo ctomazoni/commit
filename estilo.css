@@ -1,0 +1,6 @@
+#hashes {
+	display: none;
+}
+#hashes.visible {
+	display: block;
+}

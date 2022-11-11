@@ -2,89 +2,10 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>Facilitador de Commit</title>
 		<meta name="author" content="Cleber Tomazoni">
-		<script>
-			var hashes = [];
-			function criarNomeBranch() {
-				if (document.getElementById('branch').value == 'dev') {
-					document.getElementById('new_branch').value = 'SO' + document.getElementById('nr_os').value;
-				} else {
-					document.getElementById('new_branch').value = document.getElementById('branch').value + '_SO' + document.getElementById('nr_os').value;
-				}
-				document.getElementById('criar').value = 'Atualizar nome da branch';
-			}
-			function getTextAndCopy(num) {
-				return '<input type="text" id="'+num+'"><input type="button" class="copy" onclick="copiar('+num+');" value="Copiar"/><br>';
-			}
-			function getHashAndRemove(num) {
-				return '<input type="text" id="hash'+num+'"><input type="button" class="remove" onclick="removerHash('+num+');" value="Remover hash"/><br>';
-			}
-			function getCommit(isAmend) {
-				return 'git commit' + (isAmend ? ' --amend' : '') + ' -m "[SO-'
-					+document.getElementById('nr_os').value+'] '
-					+document.getElementById('type').value+'('
-					+document.getElementById('project').value+'): '
-					+document.getElementById('description').value+'"';
-			}
-			function gerarComandos() {
-				var comandos = [];
-				comandos.push('git fetch');
-				comandos.push('git checkout ' + document.getElementById('branch').value);
-				comandos.push('git pull origin ' + document.getElementById('branch').value);
-				comandos.push('git checkout -b ' + document.getElementById('new_branch').value);
-				for (var i = 0; i < hashes.length; i++) {
-					comandos.push('git cherry-pick ' + document.getElementById('hash' + i).value);
-				}
-				if (document.getElementById('cherry_pick').checked) {
-					//
-				} else {
-					comandos.push(getCommit(document.getElementById('amend').checked));
-				}
-				comandos.push('git push');
-				apresentarComandos(comandos);
-				validarTipoCommit();
-				document.getElementById('gerar').value = 'Atualizar comandos';
-			}
-			function apresentarComandos(comandos) {
-				document.getElementById('result').innerHTML = '';
-				for (var i = 0; i < comandos.length; i++) {
-					document.getElementById('result').innerHTML += getTextAndCopy(i + 1);
-				}
-				for (var i = 0; i < comandos.length; i++) {
-					document.getElementById(i + 1).value = comandos[i];
-				}
-			}
-			function validarTipoCommit() {
-				if (document.getElementById('type').value == '---') {
-					alert('Informe o tipo do commit.');
-				}
-			}
-			function copiar(id) {
-				document.getElementById(id).select();
-				document.execCommand('copy');
-			}
-			function inserirHash(hash) {
-				hashes.push(document.getElementById('hash').value);
-				document.getElementById('hash').value = '';
-				listarHashes();
-			}
-			function listarHashes() {
-				document.getElementById('hashes').innerHTML = '';
-				for (var i = 0; i < hashes.length; i++) {
-					document.getElementById('hashes').innerHTML += getHashAndRemove(i);
-				}
-				for (var i = 0; i < hashes.length; i++) {
-					document.getElementById('hash' + i).value = hashes[i];
-				}
-			}
-			function removerHash(num) {
-				var index = hashes.indexOf(document.getElementById('hash'+num).value);
-				if (index >= 0) {
-					hashes.splice(index, 1);
-				}
-			}
-		</script>
+		<link rel="stylesheet" href="estilo.css">
+		<script src="funcoes.js"></script>
+		<title>Facilitador de Commit</title>
 	</head>
 	<body>
 		<div>
@@ -98,7 +19,7 @@
 			<br>
 			<label for="new_branch">Nova branch:</label>
 			<input type="text" id="new_branch" placeholder="Nova branch">
-			<input type="button" id="criar" onclick="criarNomeBranch();" value="Criar nome da branch"/>
+			<input type="button" id="criar" onclick="criarNomeBranch();" value="Criar nome da branch">
 			<br>
 			<br>
 			<label for="type">Tipo:</label>
@@ -122,17 +43,23 @@
 			<input type="text" id="description" placeholder="Descrição do commit">
 			<br>
 			<br>
-			<input type="checkbox" id="cherry_pick"><!-- Se está marcado, habilita campo para inserir -->
+			<input type="checkbox" id="cherry_pick" onclick="exibirHashes();">
 			<label for="cherry_pick">Cherry Pick</label>
-			<input type="text" id="hash"><input type="button" id="add" onclick="inserirHash();" value="Inserir hash"/><br>
-			<br>
 			<div id="hashes">
+				<br>
+				<input type="text" id="hash" placeholder="Hash"><input type="button" id="add" onclick="inserirHash();" value="Inserir hash">
+				<br>
+				<br>
+				<div id="hashList">
+				</div>
 			</div>
+			<br>
+			<br>
 			<input type="checkbox" id="amend">
 			<label for="amend">Amend (Alterar)</label>
 			<br>
 			<br>
-			<input type="button" id="gerar" onclick="gerarComandos();" value="Gerar comandos"/>
+			<input type="button" id="gerar" onclick="gerarComandos();" value="Gerar comandos">
 			<br>
 			<br>
 		</div>
