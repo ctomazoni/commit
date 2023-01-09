@@ -1,6 +1,32 @@
+* {
+	font-size: 10pt;
+	font-family: verdana;
+}
+input[type=text] {
+	width: 250px;
+	height: 25px;
+}
+input[type=button], select {
+	height: 31px;
+}
+select {
+	width: 100px;
+}
+#new_branch {
+	width: 300px;
+}
+#description {
+	width: 500px;
+}
 #hashes {
 	display: none;
 }
 #hashes.visible {
 	display: block;
+}
+#result input[type=text] {
+	width: 800px;
+}
+.copied {
+	background-color: #CCCCCC;
 }

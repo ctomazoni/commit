@@ -58,6 +58,7 @@ function validarTipoCommit() {
 function copiar(id) {
 	document.getElementById(id).select();
 	document.execCommand('copy');
+	document.getElementById(id).classList.add('copied');
 }
 function exibirHashes() {
 	if (document.getElementById('cherry_pick').checked) {
